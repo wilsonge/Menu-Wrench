@@ -162,7 +162,7 @@ class modMenuwrenchHelper {
 
 			foreach ($item->children as $item) {
 
-				if (fmod($index, $divisor) == 0) {
+				if ($index > 0 && fmod($index, $divisor) == 0) {
 					$output .= $containerCloseTag . $containerOpenTag;
 				}
 
