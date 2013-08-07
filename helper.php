@@ -154,7 +154,7 @@ class modMenuwrenchHelper {
 
 			$output .= $containerOpenTag;
 
-			if ($columns > 0) {
+			if ($columns > 0 && isset($item->childrentotal)) {
 				// Calculate divisor based on this item's total children and parameter
 				$divisor = ceil($item->childrentotal / $columns);
 			}
