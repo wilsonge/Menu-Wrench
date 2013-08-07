@@ -67,7 +67,9 @@ class modMenuwrenchHelper {
 			/**
 			 * Builds object classes
 			 */
-			$item->class = 'item' . $item->id . ' ' . $item->alias;
+			if (isset($item->id)) {
+				$item->class = 'item' . $item->id . ' ' . $item->alias;
+			}
 
 			// Add parent class to all parents
 			if (isset($item->children)) {
@@ -75,13 +77,17 @@ class modMenuwrenchHelper {
 			}
 
 			// Add current class to specific item
-			if ($item->id == $this->active->id) {
-				$item->class .= ' current';
+			if (isset($this->active->id)) {
+				if ($item->id == $this->active->id) {
+					$item->class .= ' current';
+				}
 			}
 
 			// Add active class to all items in active branch
-			if (in_array($item->id, $this->active->tree)) {
-				$item->class .= ' active';
+			if (isset($this->active->tree)) {
+				if (in_array($item->id, $this->active->tree)) {
+					$item->class .= ' active';
+				}
 			}
 		}
 
