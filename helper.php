@@ -77,14 +77,14 @@ class modMenuwrenchHelper {
 			}
 
 			// Add current class to specific item
-			if (isset($this->active->id)) {
+			if (isset($this->active->id, $item->id)) {
 				if ($item->id == $this->active->id) {
 					$item->class .= ' current';
 				}
 			}
 
 			// Add active class to all items in active branch
-			if (isset($this->active->tree)) {
+			if (isset($this->active->tree, $item->id)) {
 				if (in_array($item->id, $this->active->tree)) {
 					$item->class .= ' active';
 				}
@@ -154,16 +154,20 @@ class modMenuwrenchHelper {
 
 			$output .= $containerOpenTag;
 
-			// Calculate divisor based on this item's total children and parameter
-			$divisor = ceil($item->childrentotal / $columns);
+			if ($columns > 0) {
+				// Calculate divisor based on this item's total children and parameter
+				$divisor = ceil($item->childrentotal / $columns);
+			}
 
 			// Zero counter for calculating column split
 			$index = 0;
 
 			foreach ($item->children as $item) {
 
-				if ($index > 0 && fmod($index, $divisor) == 0) {
-					$output .= $containerCloseTag . $containerOpenTag;
+				if ($columns > 0) {
+					if ($index > 0 && fmod($index, $divisor) == 0) {
+						$output .= $containerCloseTag . $containerOpenTag;
+					}
 				}
 
 				$output .= $this->render($item, $containerTag, $containerClass, $itemTag, $level);
