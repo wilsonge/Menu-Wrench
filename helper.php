@@ -33,12 +33,12 @@ class modMenuwrenchHelper {
 	 *
 	 */
 	function getBranches() {
-		$parentItems = $this->params->get('parentItems');
-		$items       = $this->menu->_items;
+		$renderedItems = $this->params->get('renderedItems');
+		$items         = $this->menu->_items;
 
-		// Convert parentItems to an array if only one item is selected
-		if (!is_array($parentItems)) {
-			$parentItems = str_split($parentItems, strlen($parentItems));
+		// Convert renderedItems to an array if only one item is selected
+		if (!is_array($renderedItems)) {
+			$renderedItems = str_split($renderedItems, strlen($renderedItems));
 		}
 
 		/**
@@ -60,7 +60,7 @@ class modMenuwrenchHelper {
 		foreach ($items as $key => $item) {
 
 			// Remove non-selected menu item objects
-			if (!in_array($key, $parentItems)) {
+			if (!in_array($key, $renderedItems)) {
 				unset($items[$key]);
 			}
 
@@ -127,7 +127,7 @@ class modMenuwrenchHelper {
 	 * @param string $containerTag  : optional, declare a different container HTML element
 	 * @param string $containerClass: optional, declare a different container class
 	 * @param string $itemTag       : optional, declare a different menu item HTML element
-	 * @param int $level            : counter for level of depth that is rendering.
+	 * @param int $level            : counter for level of renderDepth that is rendering.
 	 * @return string
 	 *
 	 * @since 0.1
@@ -139,8 +139,8 @@ class modMenuwrenchHelper {
 		$itemCloseTag      = str_replace('<', '</', $itemTag);
 		$containerOpenTag  = str_replace('>', ' class="' . $containerClass . '">', $containerTag);
 		$containerCloseTag = str_replace('<', '</', $containerTag);
-		$depth             = htmlspecialchars($this->params->get('depth'));
-		$columns           = htmlspecialchars($this->params->get('columns'));
+		$renderDepth       = $this->params->get('renderDepth', 10);
+		$submenuSplits     = $this->params->get('submenuSplits', 0);
 
 		if ($item->type == 'separator') {
 			$output = $itemOpenTag . '<span class="separator">' . $item->name . '</span>';
@@ -150,13 +150,13 @@ class modMenuwrenchHelper {
 
 		$level++;
 
-		if (isset($item->children) && $level <= $depth) {
+		if (isset($item->children) && $level <= $renderDepth) {
 
 			$output .= $containerOpenTag;
 
-			if ($columns > 0 && isset($item->childrentotal)) {
+			if ($submenuSplits > 0 && isset($item->childrentotal)) {
 				// Calculate divisor based on this item's total children and parameter
-				$divisor = ceil($item->childrentotal / $columns);
+				$divisor = ceil($item->childrentotal / $submenuSplits);
 			}
 
 			// Zero counter for calculating column split
@@ -164,7 +164,7 @@ class modMenuwrenchHelper {
 
 			foreach ($item->children as $item) {
 
-				if ($columns > 0) {
+				if ($submenuSplits > 0) {
 					if ($index > 0 && fmod($index, $divisor) == 0) {
 						$output .= $containerCloseTag . $containerOpenTag;
 					}
