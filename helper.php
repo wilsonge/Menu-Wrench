@@ -34,11 +34,17 @@ class modMenuwrenchHelper {
 	 */
 	function getBranches() {
 		$renderedItems = $this->params->get('renderedItems');
+		$hiddenItems   = $this->params->get('hiddenItems');
 		$items         = $this->menu->_items;
 
 		// Convert renderedItems to an array if only one item is selected
 		if (!is_array($renderedItems)) {
 			$renderedItems = str_split($renderedItems, strlen($renderedItems));
+		}
+
+		// Convert hiddenItems to an array if only one item is selected
+		if (!is_array($hiddenItems)) {
+			$hiddenItems = str_split($hiddenItems, strlen($hiddenItems));
 		}
 
 		/**
@@ -88,6 +94,17 @@ class modMenuwrenchHelper {
 				if (in_array($item->id, $this->active->tree)) {
 					$item->class .= ' active';
 				}
+			}
+
+			// Hide selected items, promote children up one level
+			if (in_array($item->id, $hiddenItems)) {
+
+				foreach ($item->children as $child) {
+					$items[$item->parent]->children[$child->id] = $child;
+				}
+
+				//unset($item->children);
+				unset($items[$item->parent]->children[$item->id]);
 			}
 		}
 

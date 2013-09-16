@@ -65,7 +65,7 @@
 		</param>
 
 		<field name="hiddenItems"
-		       type="menuitem"
+		       type="menuitems"
 		       multiple="true"
 		       size="25"
 		       label="MOD_MENU_WRENCH_HIDDEN_ITEMS_LABEL"
